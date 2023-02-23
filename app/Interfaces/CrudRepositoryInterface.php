@@ -5,7 +5,7 @@ namespace App\Interfaces;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-interface CrudRepository
+interface CrudRepositoryInterface
 {
     public function findAll(): Collection;
 

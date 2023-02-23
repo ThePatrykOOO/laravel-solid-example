@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Repositories\DepartmentRepository;
+use App\Services\Departments\DepartmentReportService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,5 +62,14 @@ class DepartmentController extends Controller
     {
         $this->departmentRepository->delete($departmentId);
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function generateReportListOfEmployees(
+        int $departmentId,
+        string $reportType,
+        DepartmentReportService $departmentReportService
+    ): JsonResponse {
+        $reportData = $departmentReportService->generateReport($departmentId, $reportType);
+        return new JsonResponse($reportData, Response::HTTP_CREATED);
     }
 }

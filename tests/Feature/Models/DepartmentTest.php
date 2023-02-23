@@ -7,7 +7,7 @@ use App\Models\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class DelegationTest extends TestCase
+class DepartmentTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\CrudRepository;
+use App\Interfaces\CrudRepositoryInterface;
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class EmployeeRepository implements CrudRepository
+class EmployeeRepository implements CrudRepositoryInterface
 {
     public function findAll(): Collection
     {

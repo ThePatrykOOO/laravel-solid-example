@@ -2,12 +2,13 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\CrudRepository;
+use App\Interfaces\CrudRepositoryInterface;
+use App\Interfaces\DepartmentReportRepositoryInterface;
 use App\Models\Department;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class DepartmentRepository implements CrudRepository
+class DepartmentRepository implements CrudRepositoryInterface, DepartmentReportRepositoryInterface
 {
     public function findAll(): Collection
     {
@@ -36,5 +37,29 @@ class DepartmentRepository implements CrudRepository
     public function delete(int $id): void
     {
         $this->findOrFail($id)->delete();
+    }
+
+    public function getListEmployees(Department $department): Collection
+    {
+        return $department
+            ->employees()
+            ->select('id', 'first_name', 'last_name')
+            ->get();
+    }
+
+    public function getSalaryEmployees(Department $department): Collection
+    {
+        return $department
+            ->employees()
+            ->select('id', 'first_name', 'last_name', 'usd_salary')
+            ->get();
+    }
+
+    public function getRoleEmployees(Department $department): Collection
+    {
+        return $department
+            ->employees()
+            ->select('id', 'first_name', 'last_name', 'role')
+            ->get();
     }
 }

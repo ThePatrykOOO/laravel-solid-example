@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controller;
 
 use App\Models\Department;
+use App\Models\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -113,5 +114,37 @@ class DepartmentControllerTest extends TestCase
 
 
         $this->assertCount(0, Department::all());
+    }
+
+    public function testDepartmentRepositorySuccess(): void
+    {
+        $department = Department::factory()->create();
+
+
+        Employee::factory(2)->create(
+            [
+                'department_id' => $department->id
+            ]
+        );
+
+        $type = 'list';
+
+        $response = $this->post("/api/departments/report/{$department->id}/{$type}");
+
+        $response->assertStatus(201);
+
+        $response->assertJsonStructure(
+            [
+                'department' => [
+                    'id',
+                    'name',
+                ],
+                'rows',
+                'summary'
+            ]
+        );
+
+
+        $this->assertEquals($department->id, $response->json('department.id'));
     }
 }

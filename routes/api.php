@@ -22,4 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::apiResource('departments', DepartmentController::class);
+Route::post('departments/report/{department}/{type}', [DepartmentController::class, 'generateReportListOfEmployees']);
+
+
 Route::apiResource('employees', EmployeeController::class);
