@@ -1,5 +1,7 @@
 # Laravel Solid Example
 
+[Link to article described this code](https://medium.com/@thepatrykooo/laravel-solid-princliples-project-example-bc3ad390b322)
+
 ## Introduction
 
 I have prepared a Laravel project that include SOLID principles and some design patterns such as builder or template
