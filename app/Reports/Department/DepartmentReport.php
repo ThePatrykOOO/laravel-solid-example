@@ -14,9 +14,9 @@ abstract class DepartmentReport
     protected Collection $data;
     protected array $summary;
 
-    public function __construct(Department $department, DepartmentRepository $departmentRepository)
+    public function __construct(Department $department)
     {
-        $this->departmentRepository = $departmentRepository;
+        $this->departmentRepository = new DepartmentRepository();
         $this->department = $department;
     }
 

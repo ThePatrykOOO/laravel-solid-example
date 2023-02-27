@@ -4,7 +4,6 @@ namespace Tests\Unit\Services;
 
 use App\Models\Department;
 use App\Models\Employee;
-use App\Repositories\DepartmentRepository;
 use App\Services\Departments\DepartmentReportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -41,7 +40,7 @@ class DepartmentReportServiceTest extends TestCase
             ]
         );
 
-        $departmentReportService = new DepartmentReportService(new  DepartmentRepository());
+        $departmentReportService = new DepartmentReportService();
         $reportData = $departmentReportService->generateReport($department->id, "list");
 
         $expectedResult = [
@@ -97,7 +96,7 @@ class DepartmentReportServiceTest extends TestCase
             ]
         );
 
-        $departmentReportService = new DepartmentReportService(new  DepartmentRepository());
+        $departmentReportService = new DepartmentReportService();
         $reportData = $departmentReportService->generateReport($department->id, "salary");
 
         $expectedResult = [
@@ -167,7 +166,7 @@ class DepartmentReportServiceTest extends TestCase
             ]
         );
 
-        $departmentReportService = new DepartmentReportService(new  DepartmentRepository());
+        $departmentReportService = new DepartmentReportService();
         $reportData = $departmentReportService->generateReport($department->id, "role");
 
         $expectedResult = [
@@ -215,7 +214,7 @@ class DepartmentReportServiceTest extends TestCase
             ]
         );
 
-        $departmentReportService = new DepartmentReportService(new  DepartmentRepository());
+        $departmentReportService = new DepartmentReportService();
 
         $this->expectExceptionMessage("Report type not found");
 

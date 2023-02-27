@@ -11,12 +11,11 @@ use App\Repositories\DepartmentRepository;
 
 class DepartmentReportService
 {
-
     private DepartmentRepository $departmentRepository;
 
-    public function __construct(DepartmentRepository $departmentRepository)
+    public function __construct()
     {
-        $this->departmentRepository = $departmentRepository;
+        $this->departmentRepository = new DepartmentRepository();
     }
 
     public function generateReport(int $departmentId, string $reportType): array
@@ -31,10 +30,10 @@ class DepartmentReportService
     private function initialize(Department $department, string $reportType): DepartmentReport
     {
         return match ($reportType) {
-            'list' => new ListOfEmployeesReport($department, $this->departmentRepository),
-            'salary' => new SalaryEmployeesReport($department, $this->departmentRepository),
-            'role' => new RoleEmployeesReport($department, $this->departmentRepository),
-            default => throw new \Exception("Report type not found"),
+            'list' => new ListOfEmployeesReport($department),
+            'salary' => new SalaryEmployeesReport($department),
+            'role' => new RoleEmployeesReport($department),
+            default => throw new \InvalidArgumentException("Report type not found"),
         };
     }
 }
