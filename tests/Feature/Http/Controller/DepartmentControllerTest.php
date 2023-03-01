@@ -5,6 +5,7 @@ namespace Tests\Feature\Http\Controller;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class DepartmentControllerTest extends TestCase
@@ -116,7 +117,7 @@ class DepartmentControllerTest extends TestCase
         $this->assertCount(0, Department::all());
     }
 
-    public function testDepartmentRepositorySuccess(): void
+    public function testDepartmentReportSuccess(): void
     {
         $department = Department::factory()->create();
 
@@ -146,5 +147,29 @@ class DepartmentControllerTest extends TestCase
 
 
         $this->assertEquals($department->id, $response->json('department.id'));
+    }
+
+    public function testDepartmentReportTypeNotFoundSuccess(): void
+    {
+        $department = Department::factory()->create();
+
+
+        Employee::factory(2)->create(
+            [
+                'department_id' => $department->id
+            ]
+        );
+
+        $type = 'blabla';
+
+        $response = $this->post("/api/departments/report/{$department->id}/{$type}");
+
+        $response->assertStatus(Response::HTTP_BAD_REQUEST);
+
+        $response->assertJsonFragment(
+            [
+                'message' => "Report Type not found"
+            ]
+        );
     }
 }

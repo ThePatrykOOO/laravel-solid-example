@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReportType;
 use App\Http\Requests\DepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Repositories\DepartmentRepository;
@@ -69,6 +70,10 @@ class DepartmentController extends Controller
         string $reportType,
         DepartmentReportService $departmentReportService
     ): JsonResponse {
+        $reportType = ReportType::tryFrom($reportType);
+        if (!$reportType) {
+            return new JsonResponse(['message' => "Report Type not found"], Response::HTTP_BAD_REQUEST);
+        }
         $reportData = $departmentReportService->generateReport($departmentId, $reportType);
         return new JsonResponse($reportData, Response::HTTP_CREATED);
     }

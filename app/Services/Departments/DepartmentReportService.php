@@ -2,6 +2,7 @@
 
 namespace App\Services\Departments;
 
+use App\Enums\ReportType;
 use App\Models\Department;
 use App\Reports\Department\DepartmentReport;
 use App\Reports\Department\ListOfEmployeesReport;
@@ -18,7 +19,7 @@ class DepartmentReportService
         $this->departmentRepository = new DepartmentRepository();
     }
 
-    public function generateReport(int $departmentId, string $reportType): array
+    public function generateReport(int $departmentId, ReportType $reportType): array
     {
         $department = $this->departmentRepository->findOrFail($departmentId);
 
@@ -27,9 +28,9 @@ class DepartmentReportService
         return $departmentReport->generate();
     }
 
-    private function initialize(Department $department, string $reportType): DepartmentReport
+    private function initialize(Department $department, ReportType $reportType): DepartmentReport
     {
-        return match ($reportType) {
+        return match ($reportType->value) {
             'list' => new ListOfEmployeesReport($department),
             'salary' => new SalaryEmployeesReport($department),
             'role' => new RoleEmployeesReport($department),

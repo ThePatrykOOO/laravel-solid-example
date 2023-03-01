@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Enums\ReportType;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Services\Departments\DepartmentReportService;
@@ -41,7 +42,7 @@ class DepartmentReportServiceTest extends TestCase
         );
 
         $departmentReportService = new DepartmentReportService();
-        $reportData = $departmentReportService->generateReport($department->id, "list");
+        $reportData = $departmentReportService->generateReport($department->id, ReportType::LIST);
 
         $expectedResult = [
             'department' => [
@@ -97,7 +98,7 @@ class DepartmentReportServiceTest extends TestCase
         );
 
         $departmentReportService = new DepartmentReportService();
-        $reportData = $departmentReportService->generateReport($department->id, "salary");
+        $reportData = $departmentReportService->generateReport($department->id, ReportType::SALARY);
 
         $expectedResult = [
             'department' => [
@@ -167,7 +168,7 @@ class DepartmentReportServiceTest extends TestCase
         );
 
         $departmentReportService = new DepartmentReportService();
-        $reportData = $departmentReportService->generateReport($department->id, "role");
+        $reportData = $departmentReportService->generateReport($department->id, ReportType::ROLE);
 
         $expectedResult = [
             'department' => [
@@ -204,20 +205,5 @@ class DepartmentReportServiceTest extends TestCase
         ];
 
         $this->assertEquals($expectedResult, $reportData);
-    }
-
-    public function testGenerateReportTypeNotExists(): void
-    {
-        $department = Department::factory()->create(
-            [
-                'name' => "NYC Department 2"
-            ]
-        );
-
-        $departmentReportService = new DepartmentReportService();
-
-        $this->expectExceptionMessage("Report type not found");
-
-        $reportData = $departmentReportService->generateReport($department->id, "blabla");
     }
 }
