@@ -34,7 +34,7 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request): DepartmentResource
     {
-        $department = $this->departmentRepository->store($request->validated());
+        $department = $this->departmentRepository->store((array)$request->validated());
         return new DepartmentResource($department);
     }
 
@@ -52,7 +52,7 @@ class DepartmentController extends Controller
      */
     public function update(DepartmentRequest $request, int $departmentId): JsonResponse
     {
-        $this->departmentRepository->update($request->validated(), $departmentId);
+        $this->departmentRepository->update((array)$request->validated(), $departmentId);
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 

@@ -20,3 +20,5 @@ jobs:
         run: php artisan key:generate
       - name: Run PHPUnit tests
         run: ./vendor/bin/phpunit --stop-on-failure
+      - name: Run PHPstan analyse
+        run: ./vendor/bin/phpstan analyse

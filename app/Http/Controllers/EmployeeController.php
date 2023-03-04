@@ -32,7 +32,7 @@ class EmployeeController extends Controller
      */
     public function store(EmployeeRequest $request): EmployeeResource
     {
-        $employee = $this->employeeRepository->store($request->validated());
+        $employee = $this->employeeRepository->store((array)$request->validated());
         return new EmployeeResource($employee);
     }
 
@@ -50,7 +50,7 @@ class EmployeeController extends Controller
      */
     public function update(EmployeeRequest $request, int $employeeId): JsonResponse
     {
-        $this->employeeRepository->update($request->validated(), $employeeId);
+        $this->employeeRepository->update((array)$request->validated(), $employeeId);
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 

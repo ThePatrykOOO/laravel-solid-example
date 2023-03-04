@@ -23,18 +23,26 @@ class DepartmentReportService
     {
         $department = $this->departmentRepository->findOrFail($departmentId);
 
-        $departmentReport = $this->initialize($department, $reportType);
+        if ($department instanceof Department) {
+            $departmentReport = $this->initialize($department, $reportType);
 
-        return $departmentReport->generate();
+            return $departmentReport->generate();
+        }
+
+        return [];
     }
 
     private function initialize(Department $department, ReportType $reportType): DepartmentReport
     {
-        return match ($reportType->value) {
-            'list' => new ListOfEmployeesReport($department),
-            'salary' => new SalaryEmployeesReport($department),
-            'role' => new RoleEmployeesReport($department),
-            default => throw new \InvalidArgumentException("Report type not found"),
-        };
+        switch ($reportType->value) {
+            case 'list':
+                return new ListOfEmployeesReport($department);
+            case 'salary':
+                return new SalaryEmployeesReport($department);
+            case 'role':
+                return new RoleEmployeesReport($department);
+            default:
+                throw new \InvalidArgumentException("Report type not found");
+        }
     }
 }
