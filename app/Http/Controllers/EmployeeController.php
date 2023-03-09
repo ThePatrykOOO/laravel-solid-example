@@ -6,6 +6,7 @@ use App\Http\Requests\EmployeeRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Repositories\EmployeeRepository;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -23,8 +24,10 @@ class EmployeeController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $listOfEmployees = $this->employeeRepository->findAll();
-        return EmployeeResource::collection($listOfEmployees);
+        return Cache::remember("employees", self::CACHE_TTL, function () {
+            $listOfEmployees = $this->employeeRepository->findAll();
+            return EmployeeResource::collection($listOfEmployees);
+        });
     }
 
     /**
@@ -41,8 +44,10 @@ class EmployeeController extends Controller
      */
     public function show(int $employeeId): EmployeeResource
     {
-        $employee = $this->employeeRepository->findOrFail($employeeId);
-        return new EmployeeResource($employee);
+        return Cache::remember("employee.$employeeId", self::CACHE_TTL, function () use ($employeeId) {
+            $employee = $this->employeeRepository->findOrFail($employeeId);
+            return new EmployeeResource($employee);
+        });
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Resources\DepartmentResource;
 use App\Repositories\DepartmentRepository;
 use App\Services\Departments\DepartmentReportService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,8 +26,10 @@ class DepartmentController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        $listOfDepartments = $this->departmentRepository->findAll();
-        return DepartmentResource::collection($listOfDepartments);
+        return Cache::remember("departments", self::CACHE_TTL, function () {
+            $listOfDepartments = $this->departmentRepository->findAll();
+            return DepartmentResource::collection($listOfDepartments);
+        });
     }
 
     /**
@@ -43,8 +46,10 @@ class DepartmentController extends Controller
      */
     public function show(int $departmentId): DepartmentResource
     {
-        $department = $this->departmentRepository->findOrFail($departmentId);
-        return new DepartmentResource($department);
+        return Cache::remember("department.$departmentId", self::CACHE_TTL, function () use ($departmentId) {
+            $department = $this->departmentRepository->findOrFail($departmentId);
+            return new DepartmentResource($department);
+        });
     }
 
     /**
@@ -69,12 +74,19 @@ class DepartmentController extends Controller
         int $departmentId,
         string $reportType,
         DepartmentReportService $departmentReportService
-    ): JsonResponse {
-        $reportType = ReportType::tryFrom($reportType);
-        if (!$reportType) {
-            return new JsonResponse(['message' => "Report Type not found"], Response::HTTP_BAD_REQUEST);
-        }
-        $reportData = $departmentReportService->generateReport($departmentId, $reportType);
-        return new JsonResponse($reportData, Response::HTTP_CREATED);
+    ): JsonResponse
+    {
+        return Cache::remember("department.$departmentId.$reportType", self::CACHE_TTL, function () use (
+            $departmentReportService,
+            $reportType,
+            $departmentId
+        ) {
+            $reportType = ReportType::tryFrom($reportType);
+            if (!$reportType) {
+                return new JsonResponse(['message' => "Report Type not found"], Response::HTTP_BAD_REQUEST);
+            }
+            $reportData = $departmentReportService->generateReport($departmentId, $reportType);
+            return new JsonResponse($reportData, Response::HTTP_CREATED);
+        });
     }
 }
